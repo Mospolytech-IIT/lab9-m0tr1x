@@ -1,0 +1,9 @@
+<form method="post" action="/posts/edit/{{ post.id }}">
+    <label for="title">Заголовок:</label>
+    <input type="text" id="title" name="title" value="{{ post.title }}" required>
+
+    <label for="content">Контент:</label>
+    <textarea id="content" name="content" required>{{ post.content }}</textarea>
+
+    <button type="submit">Обновить пост</button>
+</form>

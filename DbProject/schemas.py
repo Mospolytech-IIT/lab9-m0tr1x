@@ -9,6 +9,7 @@ class PostBase(BaseModel):
     """
     title: str
     content: str
+    user_id: int
 
 
 class PostCreate(PostBase):

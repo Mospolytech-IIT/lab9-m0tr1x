@@ -1,0 +1,12 @@
+<form action="/users/edit/{{ user.id }}" method="post">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" value="{{ user.username }}" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" value="{{ user.password }}" required>
+
+    <button type="submit">Save Changes</button>
+</form>

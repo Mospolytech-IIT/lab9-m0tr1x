@@ -6,13 +6,13 @@ from sqlalchemy.orm import selectinload
 from models import User, Post
 
 
-
 async def add_users(users_data: list, session: AsyncSession):
     """Adds a list of users to the database"""
     users = [User(username=user['username'], email=user['email'], password=user['password']) for user in users_data]
     session.add_all(users)
     await session.commit()
     print(f"{len(users)} users added.")
+
 
 async def add_posts(posts_data: list, session: AsyncSession):
     """Adds a list of posts to the database"""
@@ -21,11 +21,25 @@ async def add_posts(posts_data: list, session: AsyncSession):
     await session.commit()
     print(f"{len(posts)} posts added.")
 
+
 async def get_all_users(session: AsyncSession):
     """This function gets all users from the database"""
     result = await session.execute(select(User))
     users = result.scalars().all()
     return users
+
+
+async def get_user_by_id(user_id: int, session: AsyncSession):
+    """This function finds a user by their id"""
+    result = await session.execute(select(User).where(User.id == user_id))
+    user = result.scalars().first()
+    return user
+
+async def get_post_by_id(post_id: int, session: AsyncSession):
+    """This function finds a user by their id"""
+    result = await session.execute(select(Post).where(Post.id == post_id))
+    post = result.scalars().first()
+    return post
 
 
 async def get_all_posts_with_users(session: AsyncSession):
@@ -44,7 +58,6 @@ async def get_posts_by_user(user_id: int, session: AsyncSession):
     return posts
 
 
-
 async def update_user_email(user_id: int, new_email: str, session: AsyncSession):
     """This function updates the user's email address."""
     result = await session.execute(select(User).filter(User.id == user_id))
@@ -56,6 +69,18 @@ async def update_user_email(user_id: int, new_email: str, session: AsyncSession)
     else:
         print(f"User with id {user_id} not found.")
 
+async def update_user(user_id: int, new_username: str, new_email: str, new_password: str, session: AsyncSession):
+    """This function updates the user's email address and name"""
+    result = await session.execute(select(User).filter(User.id == user_id))
+    user = result.scalar_one_or_none()
+    if user:
+        user.username = new_username
+        user.email = new_email
+        user.password = new_password
+        await session.commit()
+        print(f"User {user.username} updated.")
+    else:
+        print(f"User with id {user_id} not found.")
 
 async def update_post_content(post_id: int, new_content: str, session: AsyncSession):
     """This function updates the post's content"""
@@ -67,7 +92,6 @@ async def update_post_content(post_id: int, new_content: str, session: AsyncSess
         print(f"Content of post '{post.title}' updated.")
     else:
         print(f"Post with id {post_id} not found.")
-
 
 
 async def delete_post(post_id: int, session: AsyncSession):
@@ -96,4 +120,3 @@ async def delete_user_and_posts(user_id: int, session: AsyncSession):
         print(f"User {user.username} and their posts deleted.")
     else:
         print(f"User with id {user_id} not found.")
-

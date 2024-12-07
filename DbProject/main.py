@@ -1,14 +1,14 @@
 from db import create_tables, get_db
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-
-from routes.user_routes import router as user_router
-from routes.post_routes import router as post_router
+from fastapi.templating import Jinja2Templates
+from routes.user_routes import user_router
+from routes.post_routes import post_router
 from step2_operations import *
 
 
 app = FastAPI()
-
+templates = Jinja2Templates(directory="templates")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,11 +31,6 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
-
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
 
 
 @app.get("/hello/{name}")
