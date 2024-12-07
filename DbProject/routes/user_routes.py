@@ -1,11 +1,11 @@
+"""This module contains all the routes for the users"""
 from fastapi import APIRouter, Depends, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse,HTMLResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi.responses import HTMLResponse
 from db import get_db
-from schemas import UserCreate, User
-from step2_operations import add_users, get_all_users, update_user_email, delete_user_and_posts, get_user_by_id, \
+from schemas import UserCreate
+from step2_operations import add_users, get_all_users, delete_user_and_posts, get_user_by_id, \
     update_user
 
 templates = Jinja2Templates(directory="templates")

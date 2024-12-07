@@ -1,5 +1,6 @@
+"""This is the database module"""
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy import inspect
 from models import Base
 
 DATABASE_URL = "postgresql+asyncpg://mtrx@localhost:5432/postgres"
@@ -13,7 +14,7 @@ async def create_tables():
             # Create all tables if they do not exist
             await conn.run_sync(Base.metadata.create_all)
             print("Tables created or already exist")
-    except Exception as e:
+    except SQLAlchemyError as e:
         print(f"Error creating tables: {e}")
 
 async def get_db() -> AsyncSession:

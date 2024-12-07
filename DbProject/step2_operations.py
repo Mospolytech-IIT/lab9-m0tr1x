@@ -8,7 +8,9 @@ from models import User, Post
 
 async def add_users(users_data: list, session: AsyncSession):
     """Adds a list of users to the database"""
-    users = [User(username=user['username'], email=user['email'], password=user['password']) for user in users_data]
+    users = [User(username=user['username'],
+                  email=user['email'],
+                  password=user['password']) for user in users_data]
     session.add_all(users)
     await session.commit()
     print(f"{len(users)} users added.")
@@ -16,7 +18,9 @@ async def add_users(users_data: list, session: AsyncSession):
 
 async def add_posts(posts_data: list, session: AsyncSession):
     """Adds a list of posts to the database"""
-    posts = [Post(title=post['title'], content=post['content'], user_id=post['user_id']) for post in posts_data]
+    posts = [Post(title=post['title'],
+                  content=post['content'],
+                  user_id=post['user_id']) for post in posts_data]
     session.add_all(posts)
     await session.commit()
     print(f"{len(posts)} posts added.")
@@ -34,6 +38,7 @@ async def get_user_by_id(user_id: int, session: AsyncSession):
     result = await session.execute(select(User).where(User.id == user_id))
     user = result.scalars().first()
     return user
+
 
 async def get_post_by_id(post_id: int, session: AsyncSession):
     """This function finds a user by their id"""
@@ -69,7 +74,12 @@ async def update_user_email(user_id: int, new_email: str, session: AsyncSession)
     else:
         print(f"User with id {user_id} not found.")
 
-async def update_user(user_id: int, new_username: str, new_email: str, new_password: str, session: AsyncSession):
+
+async def update_user(user_id: int,
+                      new_username: str,
+                      new_email: str,
+                      new_password: str,
+                      session: AsyncSession):
     """This function updates the user's email address and name"""
     result = await session.execute(select(User).filter(User.id == user_id))
     user = result.scalar_one_or_none()
@@ -82,11 +92,16 @@ async def update_user(user_id: int, new_username: str, new_email: str, new_passw
     else:
         print(f"User with id {user_id} not found.")
 
-async def update_post_content(post_id: int, new_content: str, session: AsyncSession):
+
+async def update_post_content(post_id: int,
+                              new_title: str,
+                              new_content: str,
+                              session: AsyncSession):
     """This function updates the post's content"""
     result = await session.execute(select(Post).filter(Post.id == post_id))
     post = result.scalar_one_or_none()
     if post:
+        post.title = new_title
         post.content = new_content
         await session.commit()
         print(f"Content of post '{post.title}' updated.")

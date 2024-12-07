@@ -1,10 +1,12 @@
+"""This module contains the routes for the posts"""
 from fastapi import APIRouter, Depends, Request, Form
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
 from db import get_db
-from schemas import PostCreate, Post
-from step2_operations import add_posts, get_all_posts_with_users, get_post_by_id, update_post_content, delete_post
+from schemas import PostCreate
+from step2_operations import add_posts, get_all_posts_with_users, \
+    get_post_by_id, update_post_content, delete_post
 
 post_router = APIRouter(prefix="/posts", tags=["posts"])
 templates = Jinja2Templates(directory="templates")
@@ -51,7 +53,7 @@ async def edit_post(
     if not post:
         return HTMLResponse(content="Post not found", status_code=404)
 
-    await update_post_content(post_id, content, session)
+    await update_post_content(post_id, title, content, session)
 
     return RedirectResponse(url="/posts/", status_code=303)
 
